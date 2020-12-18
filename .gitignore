@@ -1,0 +1,13 @@
+# eclipse stuff
+.settings/
+
+# build artifacts
+composer.phar
+vendor/
+build/
+deploy/
+target/
+
+# runtime artifacts
+logs/
+cfg/db.ini

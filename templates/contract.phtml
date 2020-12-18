@@ -1,0 +1,117 @@
+{% extends "base.phtml" %}
+{% block title %}Contract{% endblock %}
+{% block extrahead %}
+{% include 'table-libs.phtml' %}
+<script>
+$(document).ready(function() {
+    $('#offertable').DataTable({
+        order: [[0, "asc"]],
+        paging: true,
+        pageLength: 25,
+        bInfo: false,
+        responsive: true,
+        select: true
+    });
+    $('#asktable').DataTable({
+        order: [[0, "asc"]],
+        paging: true,
+        pageLength: 25,
+        bInfo: false,
+        responsive: true,
+        select: true
+    });
+} );
+</script>
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<h3 class="page-header"><i class="fa fa-handshake-o fa-fw"></i> Contract {{contractid}} <a id="open-in-game" class="open-in-game-contract" data-contractid="{{contractid}}" href="#"><i class="fa fa-magnet fa-fw"></i></a></h3>
+		<hr>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<p class="mb-0">Issuer: {{cinfo.issuer}}</p>
+		<p class="mb-0">Location: {{cinfo.locationName}}</p>
+		<p class="mb-0">Availability: {{cinfo.availability}}</p>
+{% if cinfo.acceptor %}
+		<p class="mb-0">Acceptor: {{cinfo.acceptor}}</p>
+{% elseif cinfo.assignee %}
+		<p class="mb-0">Assignee: {{cinfo.assignee}}</p>
+{% endif %}
+	</div>
+	<div class="col-sm-6">
+		<p class="mb-0">Status: {{cinfo.status}}</p>
+{% if cinfo.title %}
+		<p class="mb-0">Description: {{cinfo.title}}</p>
+{% else %}
+		<p class="mb-0">Description: (none)</p>
+{% endif %}
+		<p class="mb-0">Issued: {{cinfo.dateIssued}}</p>
+{% if cinfo.dateCompleted %}
+		<p class="mb-0">Completed: {{cinfo.dateCompleted}}</p>
+{% endif %}
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+{% if cinfo.price != 0 %}
+		<p class="mb-0">Acceptor Will Pay: {{cinfo.price|number_format(0)}} isk</p>
+{% endif %}
+{% if cinfo.reward != 0 %}
+		<p class="mb-0">Acceptor Will Receive: {{cinfo.reward|number_format(0)}} isk</p>
+{% endif %}
+	</div>
+</div>
+{% if offeritems %}
+<div class="row">
+	<div class="col-md-12">
+		<hr><h5>Offered</h5>
+		<div class="table-responsive">
+			<table id="offertable" class="table responsive table-striped table-condensed">
+				<thead>
+					<tr>
+						<th>Type</th>
+						<th>Qt</th>
+					</tr>
+				</thead>
+				<tbody>
+{% for item in offeritems %}
+					<tr>
+						<td>{{item.typeName}}</td>
+						<td>{{item.quantity}}</td>
+					</tr>
+{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% if askitems %}
+<div class="row">
+	<div class="col-md-12">
+		<hr><h5>Asking For</h5>
+		<div class="table-responsive">
+			<table id="asktable" class="table responsive table-striped table-condensed">
+				<thead>
+					<tr>
+						<th>Type</th>
+						<th>Qt</th>
+					</tr>
+				</thead>
+				<tbody>
+{% for item in askitems %}
+					<tr>
+						<td>{{item.typeName}}</td>
+						<td>{{item.quantity}}</td>
+					</tr>
+{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% endblock %}

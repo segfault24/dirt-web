@@ -1,0 +1,72 @@
+{% extends "base.phtml" %}
+{% block title %}Alliance Contracts{% endblock %}
+{% block extrahead %}
+{% include 'table-libs.phtml' %}
+<script type="text/javascript" src="js/contracts.js"></script>
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<h3 class="page-header"><i class="fa fa-handshake-o fa-fw"></i> Contracts</h3>
+		<hr>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadExchangeContracts()">Exchanges</button>
+				<button class="btn" onclick="loadFinishedExchangeContracts()">Finished</button>
+			</div>
+		</div>
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadCourierContracts()">Couriers</button>
+				<button class="btn" onclick="loadInProgressCourierContracts()">In Progress</button>
+				<button class="btn" onclick="loadFinishedCourierContracts()">Finished</button>
+				<button class="btn" onclick="loadFailedCourierContracts()">Failed</button>
+			</div>
+		</div>
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadOpenAuctionContracts()">Auctions</button>
+				<button class="btn" onclick="loadFinishedAuctionContracts()">Finished</button>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadOpenCapContracts()">Capitals</button>
+				<button class="btn" onclick="loadFinishedCapContracts()">Finished</button>
+			</div>
+		</div>
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadOpenCorpLogiContracts()">Corp Business</button>
+				<button class="btn" onclick="loadFinishedCorpLogiContracts()">Finished</button>
+			</div>
+		</div>
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary">Top</button>
+				<button class="btn" onclick="loadTopContractors()">Contractors</button>
+				<button class="btn" onclick="loadTopShippers()">Shippers</button>
+				<button class="btn" onclick="loadTopHaulers()">Haulers</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<hr />
+		<div class="panel panel-default no-border">
+			<div class="panel-body no-padding">
+				<div class="table-responsive">
+					<table id="contracts-table" class="table responsive table-striped table-hover table-condensed" style="width:100%"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

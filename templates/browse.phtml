@@ -1,0 +1,90 @@
+{% extends "base.phtml" %}
+{% block title %}Market Browser{% endblock %}
+{% block extrahead %}
+{% include 'table-libs.phtml' %}
+{% include 'chart-libs.phtml' %}
+<script type="text/javascript" src="js/browser-menu.js"></script>
+<script type="text/javascript" src="js/market-browser.js"></script>
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<h3 class="page-header"><img id="title-img"> <span id="title">Market Browser</span></h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-9">
+		<div class="input-group mb-1" role="group">
+			<div class="input-group-prepend">
+				<span class="input-group-text">Region</span>
+			</div>
+			<select class="form-control" id="regionselect">
+{% include 'region-select-options.phtml' %}
+			</select>
+			<button type="button" class="btn btn-primary" id="refresh-data"><i class="fa fa-refresh fa-fw"></i></button>
+			<button type="button" class="btn btn-primary open-in-game" id="open-in-game" data-typeid=""><i class="fa fa-magnet fa-fw"></i></button>
+		</div>
+	</div>
+	<div class="col-md-3">
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-9">
+		<div class="panel panel-default no-border">
+			<div class="panel-body no-padding">
+				<ul class="nav nav-tabs" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="selltablabel" href="#sell" data-toggle="tab" role="tab" aria-controls="sell" aria-selected="true">Sell</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="buytablabel" href="#buy" data-toggle="tab" role="tab" aria-controls="buy" aria-selected="false">Buy</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="depthtablabel" href="#depth" data-toggle="tab" role="tab" aria-controls="depth" aria-selected="false">Depth</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="histtablabel" href="#history" data-toggle="tab" role="tab" aria-controls="history" aria-selected="false">History</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane fade tab-border mb-3 show active" id="sell" aria-labelledby="selltablabel">
+						<div class="table-responsive">
+							<table id="sellorders" class="table responsive table-striped table-hover table-condensed" style="width:100%"></table>
+						</div>
+					</div>
+					<div class="tab-pane fade tab-border mb-3" id="buy" aria-labelledby="buytablabel">
+						<div class="table-responsive">
+							<table id="buyorders" class="table responsive table-striped table-hover table-condensed" style="width:100%"></table>
+						</div>
+					</div>
+					<div class="tab-pane fade tab-border" id="depth" aria-labelledby="depthtablabel">
+						<div id="depthchart" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+					</div>
+					<div class="tab-pane fade tab-border" id="history" aria-labelledby="historytablabel">
+						<div class="card mb-3 no-border">
+							<div class="card-body chart-card-body" style="position:relative; max-height:600px">
+								<div id="historychart" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+							</div>
+						</div>
+						<div class="card chart-card mb-3">
+							<div class="card-header chart-card-header">
+								<a data-toggle="collapse" href="#collapseOne" aria-expanded="false" class="collapsed">Data</a>
+							</div>
+							<div id="collapseOne" class="card-body chart-card-body collapse" aria-expanded="false">
+								<div class="table-responsive">
+									<table id="rawhistory" class="table responsive table-striped table-condensed" style="width:100%"></table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3 no-padding-left">
+		<div class="panel panel-default browse-panel mb-3">
+			<div class="accordian" id="g0b"></div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+#title-img {
+	width: 42px;
+	height: 42px;
+}
+
+.content-wrapper {
+	background: #545a60;
+}
+
+footer.sticky-footer {
+	background-color: #343a40;
+	color: #858e96;
+}
+
+a {
+	color: #62abff;
+}
+
+/* Autocomplete Form */
+
+.ui-menu {
+	z-index: 2000;
+}
+
+.ui-menu-item {
+	background: #212529;
+	color: #868e96;
+}
+
+/* General Use */
+
+.no-margin {
+	margin: 0px;
+}
+
+.no-padding {
+	padding: 0px;
+}
+
+.no-padding-left {
+	padding-left: 0;
+}
+
+.no-border {
+	border: 0px;
+}
+
+.border {
+	border: 1px solid #ddd;
+}
+
+.tab-border {
+	border: 0px;
+}
+
+/* Tables */
+table.dataTable td,
+table.dataTable th {
+	padding: 0.1rem 0.25rem;
+	color: #ccc;
+	border-top: none;
+	font-size: 14px;
+}
+
+.table td,
+.table th {
+	border-top: 0;
+}
+
+tr.selected {
+	background-color: #007bff !important;
+}
+
+tr.highlight {
+	background-color: #6f42c1 !important;
+}
+
+table.dataTable thead .sorting::before,
+table.dataTable thead .sorting::after,
+table.dataTable thead .sorting_asc::before,
+table.dataTable thead .sorting_asc::after,
+table.dataTable thead .sorting_desc::before,
+table.dataTable thead .sorting_desc::after,
+table.dataTable thead .sorting_asc_disabled::before,
+table.dataTable thead .sorting_asc_disabled::after,
+table.dataTable thead .sorting_desc_disabled::before,
+table.dataTable thead .sorting_desc_disabled::after {
+	bottom: 0.2em !important;
+}
+
+.dataTables_wrapper {
+	padding: 0;
+}
+
+#sellorders {
+	margin: 0 !important;
+}
+
+#buyorders {
+	margin: 0 !important;
+}
+
+.nav-link {
+	color: inherit;
+}
+
+.nav-link:hover {
+	color: white;
+}
+
+/* Market Browser Menu */
+
+.card {
+	background: #747a80;
+	border-color: #343a40;
+}
+
+.card-header {
+	color: #858e96;
+	background: #343a40;
+	padding: .2rem .5rem;
+}
+
+.card-footer {
+	color: #858e96;
+	background: #343a40;
+	padding: .2rem .5rem;
+}
+
+.card-body {
+	background: #747a80;
+	padding: 0.2rem;
+}
+
+.page-link {
+	color: #fff;
+	background-color: #343a40;
+	border: 1px solid #343a40;
+}
+
+.page-item.active .page-link {
+	color: #fff;
+	background-color: #545a60;
+	border-color: #343a40;
+}
+
+.page-item.disabled .page-link {
+	color: #6c757d;
+	background-color: #343a40;
+	border-color: #343a40;
+}
+
+.btn-primary {
+	color: #62abff;
+	background-color: #343a40;
+	border-color: #343a40;
+}
+
+.browse-card-header {
+	padding: 0;
+	overflow: hidden;
+}
+
+.browse-card-body {
+	padding: 0rem 0rem 0rem .5rem;
+	overflow: hidden;
+}
+
+.browse-btn {
+	padding: 0rem 0.5rem;
+	color: #858e96;
+	text-decoration: none !important;
+}
+
+.market-item {
+	color: #141a20;
+}
+
+.chart-card-body {
+	background: #545a60;
+}
+
+/* SBAdmin Overrides */
+
+#mainNav .navbar-collapse .navbar-sidenav > .nav-item > .nav-link {
+	padding: 0.5em 1em;
+}
