@@ -4,6 +4,8 @@
 // // Contract Data ////
 // //////////////////////////////////////////////
 
+$GLOBALS['cap_ids'] = '671, 3514, 3764, 11567, 19720, 19722, 19724, 19726, 20183, 20185, 20187, 20189, 22852, 23757, 23773, 23911, 23913, 23915, 23917, 23919, 24483, 28352, 28844, 28846, 28848, 28850, 34328, 37604, 37605, 37606, 37607, 42124, 42125, 42126, 42241, 42242, 42243, 45645, 45647, 45649, 52907';
+
 $app->get('/api/contract/corp/exchange', function ($request, $response, $args) {
     $u = Dirt\User::getUser();
     if (! $u->isLoggedIn()) {
@@ -150,12 +152,12 @@ $app->get('/api/contract/capital/outstanding', function ($request, $response, $a
                 FROM corpcontract AS c
                 JOIN corpcontractitem AS ci ON ci.contractId=c.contractId
                 JOIN vjitabestsell AS j ON j.typeid=ci.typeid
-                WHERE ci.typeId NOT IN (23911,24483,23757,23915,19722,19726,19720,19724,37605,37604,22852,23913,23917,23919,28352,3514,42125,45647,42243,42124,52907,42242,45645,37607,37606,11567,3764,671,23773,45649,42241,42126)
+                WHERE ci.typeId NOT IN ('.$GLOBALS['cap_ids'].')
                 GROUP BY c.contractId
             ) AS a ON a.contractId=c.contractId
             LEFT JOIN dlocation AS l ON l.locationId=c.startLocationId
             LEFT JOIN dentity AS e ON e.id=c.issuerId
-            WHERE ci.typeId IN (23911,24483,23757,23915,19722,19726,19720,19724,37605,37604,22852,23913,23917,23919,28352,3514,42125,45647,42243,42124,52907,42242,45645,37607,37606,11567,3764,671,23773,45649,42241,42126)
+            WHERE ci.typeId IN ('.$GLOBALS['cap_ids'].')
             AND c.`type`=2 AND c.`status`=1 AND c.`dateExpired`>NOW()';
 
     $stmt = $db->prepare($sql);
@@ -180,12 +182,12 @@ $app->get('/api/contract/capital/finished', function ($request, $response, $args
                 FROM corpcontract AS c
                 JOIN corpcontractitem AS ci ON ci.contractId=c.contractId
                 JOIN vjitabestsell AS j ON j.typeid=ci.typeid
-                WHERE ci.typeId NOT IN (23911,24483,23757,23915,19722,19726,19720,19724,37605,37604,22852,23913,23917,23919,28352,3514,42125,45647,42243,42124,52907,42242,45645,37607,37606,11567,3764,671,23773,45649,42241,42126)
+                WHERE ci.typeId NOT IN ('.$GLOBALS['cap_ids'].')
                 GROUP BY c.contractId
             ) AS a ON a.contractId=c.contractId
             LEFT JOIN dlocation AS l ON l.locationId=c.startLocationId
             LEFT JOIN dentity AS e ON e.id=c.issuerId
-            WHERE ci.typeId IN (23911,24483,23757,23915,19722,19726,19720,19724,37605,37604,22852,23913,23917,23919,28352,3514,42125,45647,42243,42124,52907,42242,45645,37607,37606,11567,3764,671,23773,45649,42241,42126)
+            WHERE ci.typeId IN ('.$GLOBALS['cap_ids'].')
             AND c.`type`=2 AND c.`status`=5
             ORDER BY c.dateCompleted DESC LIMIT 1000';
 
