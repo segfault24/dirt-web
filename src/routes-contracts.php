@@ -16,6 +16,17 @@ $app->get('/contracts', function ($request, $response, $args) {
     return $this->renderer->render($response, 'contracts.phtml', $args);
 });
 
+$app->get('/public-contracts', function ($request, $response, $args) {
+    $u = Dirt\User::getUser();
+    if (! $u->isLoggedIn()) {
+        return $response->withStatus(302)
+            ->withHeader('Location', '/login');
+    }
+    $u->setTemplateVars($args);
+
+    return $this->renderer->render($response, 'public-contracts.phtml', $args);
+});
+
 $app->get('/contract/{contractid}', function ($request, $response, $args) {
     $u = Dirt\User::getUser();
     if (! $u->isLoggedIn()) {

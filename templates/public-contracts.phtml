@@ -1,0 +1,56 @@
+{% extends "base.phtml" %}
+{% block title %}Public Contracts{% endblock %}
+{% block extrahead %}
+{% include 'table-libs.phtml' %}
+<script type="text/javascript" src="js/public-contracts.js"></script>
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<h3 class="page-header"><i class="fa fa-handshake-o fa-fw"></i> Contracts</h3>
+		<hr>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadPublicExchangeContracts()">Exchanges</button>
+				<button class="btn" onclick="loadPublicFinishedExchangeContracts()">Finished</button>
+			</div>
+		</div>
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadPublicCourierContracts()">Couriers</button>
+				<button class="btn" onclick="loadPublicFinishedCourierContracts()">Finished</button>
+			</div>
+		</div>
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadPublicOpenAuctionContracts()">Auctions</button>
+				<button class="btn" onclick="loadPublicFinishedAuctionContracts()">Finished</button>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="btn-toolbar" role="toolbar">
+			<div class="btn-group btn-group-sm" role="group">
+				<button class="btn btn-secondary" onclick="loadPublicOpenCapContracts()">Capitals</button>
+				<button class="btn" onclick="loadPublicFinishedCapContracts()">Finished</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<hr />
+		<div class="panel panel-default no-border">
+			<div class="panel-body no-padding">
+				<div class="table-responsive">
+					<table id="contracts-table" class="table responsive table-striped table-hover table-condensed" style="width:100%"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
