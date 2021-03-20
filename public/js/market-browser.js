@@ -232,7 +232,8 @@ $(document).ready(function(){
 			Highcharts.chart('depthchart', {
 				chart: {
 					type: 'area',
-					zoomType: 'xy'
+					zoomType: 'xy',
+					backgroundColor: "#202020"
 				},
 				title:{
 					text: ''
@@ -360,6 +361,9 @@ $(document).ready(function(){
 			$.fn.dataTable.tables({visible: true, api: true}).columns.adjust();
 
 			Highcharts.chart('historychart', {
+				chart: {
+					backgroundColor: "#202020"
+				},
 				title: {
 					text: ''
 				},
@@ -374,7 +378,7 @@ $(document).ready(function(){
 						x: -3
 					},
 					title: {
-						text: 'HAL'
+						text: null
 					},
 					height: '70%',
 					lineWidth: 2,
@@ -387,7 +391,7 @@ $(document).ready(function(){
 						x: -3
 					},
 					title: {
-						text: 'Volume'
+						text: null
 					},
 					top: '75%',
 					height: '25%',

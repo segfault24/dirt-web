@@ -1,10 +1,15 @@
 :root {
-	--theme-background: 3,3,3;
+	--theme-background: 4,4,4;
 	--theme-content: 16,16,16;
 	--theme-content-highlight: 40,40,40;
 	--theme-text: 155,155,155;
+	--theme-text-highlight: 200,200,200;
 	--theme-row-selected: 40,40,40;
-	--theme-row-highlight: 28,28,28;
+	--theme-row-highlight: 27,39,79;
+	--theme-input: 32,32,32;
+	--theme-input-secondary: 24,24,24;
+	--theme-input-disabled: 20,20,20;
+	--theme-input-selected: 40,40,40;
 	--theme-item-text: 217,141,0;
 	--theme-item-text-hover: 255,183,50;
 	--theme-tab-selected: 32,32,32;
@@ -44,14 +49,12 @@ a:hover {
 	color: rgb(var(--theme-item-text-hover));
 }
 
-.form-control, .form-control:focus {
-	color: rgb(var(--theme-text));
-	background-color: rgb(var(--theme-content-highlight));
-	border: none;
+h1, h2, h3 {
+	color: rgb(var(--theme-text-highlight));
 }
 
 .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-	color: rgb(var(--theme-text));
+	color: rgb(var(--theme-text-highlight));
 	background-color: rgb(var(--theme-tab-selected));
 	border: none;
 }
@@ -74,6 +77,10 @@ a:hover {
 .no-border { border: 0px; }
 .border { border: 1px solid #ddd; }
 .tab-border { border: 0px; }
+.scroll {
+	max-height: 600px;
+	overflow-y: auto;
+}
 
 /* Tables */
 table.dataTable td,
@@ -116,20 +123,11 @@ table.dataTable thead .sorting_desc_disabled::after {
 	bottom: 0.2em !important;
 }
 
-.input-group-text {
-	color: rgb(var(--theme-text));
-	background-color: rgb(var(--theme-row-highlight));
-	border: none;
-}
-
 .dataTables_wrapper {
 	padding: 0;
 }
 
-#sellorders {
-	margin: 0 !important;
-}
-
+#sellorders,
 #buyorders {
 	margin: 0 !important;
 }
@@ -142,52 +140,97 @@ table.dataTable thead .sorting_desc_disabled::after {
 	color: white;
 }
 
-/* Market Browser Menu */
+/* Bootstrap Cards */
 
 .card {
-	background: #747a80;
-	border-color: #343a40;
+	background: rgb(var(--theme-input));
+	border-color: rgb(var(--theme-input));
 }
 
 .card-header {
 	color: rgb(var(--theme-text));
-	background: #343a40;
+	background: rgb(var(--theme-input));
 	padding: .2rem .5rem;
 }
 
 .card-footer {
 	color: rgb(var(--theme-text));
-	background: #343a40;
+	background: rgb(var(--theme-input));
 	padding: .2rem .5rem;
 }
 
 .card-body {
-	background: #747a80;
+	background: rgb(var(--theme-input));
 	padding: 0.2rem;
 }
 
-.page-link {
-	color: #fff;
-	background-color: #343a40;
-	border: 1px solid #343a40;
+/* Bootstrap Inputs */
+
+.form-control, .form-control:focus {
+	color: rgb(var(--theme-text));
+	background-color: rgb(var(--theme-content-highlight));
+	border: none;
+}
+
+.input-group-text {
+	color: rgb(var(--theme-text));
+	background-color: rgb(var(--theme-input));
+	border: none;
+}
+
+.btn.focus, .btn:focus {
+	box-shadow: 0 0 0 .2rem rgb(var(--theme-input-selected));
+}
+
+.btn,
+.btn-primary,
+.btn-link,
+.page-link,
+.paginate_button {
+	color: rgb(var(--theme-text));
+	background-color: rgb(var(--theme-input));
+	border: none;
+}
+
+.btn:hover,
+.btn-primary:hover,
+.btn-link:hover,
+.page-link:hover,
+.paginate_button:hover {
+	color: white;
+	background-color: rgb(var(--theme-input));
+	border: none;
+}
+
+.btn-secondary {
+	color: rgb(var(--theme-text));
+	background-color: rgb(var(--theme-input-secondary));
+	border: none;
+}
+
+.btn-secondary:hover {
+	color: white;
+	background-color: rgb(var(--theme-input-secondary));
+	border: none;
 }
 
 .page-item.active .page-link {
-	color: #fff;
-	background-color: #545a60;
-	border-color: #343a40;
+	color: white;
+	background-color: rgb(var(--theme-input-selected));
+	border: none;
 }
 
 .page-item.disabled .page-link {
-	color: #6c757d;
-	background-color: #343a40;
-	border-color: #343a40;
+	color: rgb(var(--theme-text));
+	background-color: rgb(var(--theme-input-disabled));
+	border: none;
 }
 
-.btn-primary {
-	color: #62abff;
-	background-color: #343a40;
-	border-color: #343a40;
+/* Market Browser */
+
+.browse-panel,
+.browse-btn {
+	font-size: 13px;
 }
 
 .browse-card-header {
@@ -202,16 +245,7 @@ table.dataTable thead .sorting_desc_disabled::after {
 
 .browse-btn {
 	padding: 0rem 0.5rem;
-	color: #858e96;
 	text-decoration: none !important;
-}
-
-.market-item {
-	color: #141a20;
-}
-
-.chart-card-body {
-	background: rgb(var(--theme-background));
 }
 
 /* SBAdmin Overrides */
