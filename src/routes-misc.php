@@ -58,40 +58,6 @@ $app->get('/search', function ($request, $response, $args) {
     }
 });
 
-$app->get('/appraisal', function ($request, $response, $args) {
-    $u = Dirt\User::getUser();
-    if (! $u->isLoggedIn()) {
-        return $response->withStatus(302)
-            ->withHeader('Location', '/login');
-    }
-    $u->setTemplateVars($args);
-
-    return $this->renderer->render($response, 'appraisal.phtml', $args);
-});
-
-$app->post('/appraisal[/{appraisalid}]', function ($request, $response, $args) {
-    $u = Dirt\User::getUser();
-    if (! $u->isLoggedIn()) {
-        return $response->withStatus(302)
-            ->withHeader('Location', '/login');
-    }
-    $u->setTemplateVars($args);
-
-    $raw = $request->getParsedBody()['rawpaste'];
-
-    $appraisalid = uniqid();
-    // $a[];
-    $lines = explode("\n", $raw);
-    foreach ($lines as $line) {
-        $parts = explode("\t", $line);
-        // $a.push($appraisalid, $parts[0], $parts[2]);
-    }
-
-    // $sql = 'INSERT INTO appraisals (appraisalid, typeid, quantity) VALUES '.str_repeat('(?,?,?),', count($a)-3).'(?,?,?)';
-
-    return $this->renderer->render($response, 'appraisal.phtml', $args);
-});
-
 $app->get('/wallet', function ($request, $response, $args) {
     $u = Dirt\User::getUser();
     if (! $u->isLoggedIn()) {
@@ -123,17 +89,6 @@ $app->get('/list-detail', function ($request, $response, $args) {
     $u->setTemplateVars($args);
 
     return $this->renderer->render($response, 'list-detail.phtml', $args);
-});
-
-$app->get('/my-alerts', function ($request, $response, $args) {
-    $u = Dirt\User::getUser();
-    if (! $u->isLoggedIn()) {
-        return $response->withStatus(302)
-            ->withHeader('Location', '/login');
-    }
-    $u->setTemplateVars($args);
-
-    return $this->renderer->render($response, 'my-alerts.phtml', $args);
 });
 
 $app->get('/economic-reports', function ($request, $response, $args) {

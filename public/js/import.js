@@ -28,17 +28,15 @@ $(document).ready(function() {
 
 	var srcRegion = 10000002;
 	var srcStruct = 60003760;
-	var dstRegion = 10000060;
-	var dstStruct = 1034877491366;
+	var dstRegion = 10000014;
+	var dstStruct = 1026293932410;
 	var data;
 
 	var preferredStructs = [
 		{ region: 10000002, struct: 60003760 },
 		{ region: 10000043, struct: 60008494 },
 		{ region: 10000032, struct: 60011866 },
-		{ region: 10000039, struct: 1024004680659 },
-		{ region: 10000060, struct: 1034877491366 },
-		{ region: 10000050, struct: 1034323745897 }
+		{ region: 10000014, struct: 1026293932410 }
 	];
 
 	function fillStructs(region, select) {
