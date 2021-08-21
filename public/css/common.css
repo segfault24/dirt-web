@@ -164,9 +164,13 @@ table.dataTable thead .sorting_desc_disabled::after {
 	padding: 0.2rem;
 }
 
+.modal-content {
+	background: rgb(var(--theme-input));
+}
+
 /* Bootstrap Inputs */
 
-.form-control, .form-control:focus {
+.form-control, .form-control:focus, .form-control[readonly] {
 	color: rgb(var(--theme-text));
 	background-color: rgb(var(--theme-content-highlight));
 	border: none;
