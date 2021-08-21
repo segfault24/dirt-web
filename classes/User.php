@@ -40,12 +40,14 @@ class User
         }
 
         // prevent session hijacking
-        if ($_SESSION['canary']['ip'] != hash('sha256', $_SERVER['REMOTE_ADDR']) || $_SESSION['canary']['usragnt'] != hash('sha256', $_SERVER['HTTP_USER_AGENT'])) {
-            session_regenerate_id(true);
-            $_SESSION['canary'] = [
-                'ip' => hash('sha256', $_SERVER['REMOTE_ADDR']),
-                'usragnt' => hash('sha256', $_SERVER['HTTP_USER_AGENT'])
-            ];
+        if (isset($_SESSION['canary'])) {
+            if ($_SESSION['canary']['ip'] != hash('sha256', $_SERVER['REMOTE_ADDR']) || $_SESSION['canary']['usragnt'] != hash('sha256', $_SERVER['HTTP_USER_AGENT'])) {
+                session_regenerate_id(true);
+                $_SESSION['canary'] = [
+                    'ip' => hash('sha256', $_SERVER['REMOTE_ADDR']),
+                    'usragnt' => hash('sha256', $_SERVER['HTTP_USER_AGENT'])
+                ];
+            }
         }
 
         $_SESSION['last_active'] = time();
