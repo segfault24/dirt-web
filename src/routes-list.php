@@ -148,7 +148,7 @@ $app->post('/my-lists', function ($request, $response, $args) {
     $listid = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['LAST_INSERT_ID()'];
 
     // parse the body and insert the iteams
-    $sql = 'INSERT INTO dirtlistitem (listId, typeId, quantity) VALUES (:listid, (SELECT typeId FROM invType WHERE typeName=:typename), :quantity)';
+    $sql = 'INSERT INTO dirtlistitem (listId, typeId, quantity) VALUES (:listid, (SELECT typeId FROM invtype WHERE typeName=:typename), :quantity)';
     $stmt = $db->prepare($sql);
     $result = parseInput($request->getParsedBody()['list-add-input']);
     $items = $result['items'];
