@@ -24,8 +24,94 @@ $app->get('/my-lists', function ($request, $response, $args) {
     $lists = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $args['data'] = $lists;
 
+    $response = $this->cache->denyCache($response);
     return $this->renderer->render($response, 'my-lists.phtml', $args);
 });
+
+// helper function, adds item to items array, increasing existing
+// quantity if the item already exists in the arry
+function add_item(&$items, $typename, $quantity) {
+    if (array_key_exists($typename, $items)) {
+        $items[$typename] = $items[$typename] + intval($quantity);
+    } else {
+        $items[$typename] = intval($quantity);
+    }
+}
+
+// parse text input into a 2d array of typenames and quantities
+function parseInput($input) {
+    $lines = explode("\n", $input);
+    $items = array();
+    $errors = array();
+
+    // filter empty lines
+    $lines2 = array();
+    for ($i=0; $i<count($lines); $i++) {
+        $line = trim($lines[$i]);
+        if (strlen($line)==0) {
+            continue;
+        }
+        array_push($lines2, $line);
+    }
+
+    if (count($lines2)>0) {
+        if (substr($lines2[0], 0, 1) === "[") {
+            // eft formatted
+            $typename = substr($lines2[0], 1, strpos($lines2[0], ",")-1);
+            add_item($items, $typename, 1);
+            for ($i=1; $i<count($lines2); $i++) {
+                // filter stuff like "[Empty Low slot]"
+                if (substr($lines2[$i], 0, 6) === "[Empty") {
+                    continue;
+                }
+                // check if it's a cargo item
+                //   "{typename} x{quantity}"
+                $parts = explode(" ", $lines2[$i]);
+                $last = $parts[count($parts)-1];
+                if (substr($last, 0, 1) === "x") {
+                    $typename = implode(" ", array_slice($parts, 0, count($parts)-1));
+                    $quantity = intval(substr($last, 1, strlen($last)-1));
+                    add_item($items, $typename, $quantity);
+                    continue;
+                }
+                // probably mod slot
+                //   "{typename}[, {ammo_type}]"
+                $idx = strpos($lines2[$i], ",");
+                if ($idx) {
+                    $typename = substr($lines2[$i], 0, $idx);
+                } else {
+                    $typename = $lines2[$i];
+                }
+                add_item($items, $typename, 1);
+            }
+        } else {
+            // probably contract or inventory formatted
+            //   "{typename}[\t{quantity}]"
+            for ($i=0; $i<count($lines2); $i++) {
+                $parts = explode("\t", $lines2[$i]);
+                $typename = $parts[0];
+                if (count($parts)==1) {
+                    $quantity = 1;
+                } else {
+                    $qt = intval($parts[1]);
+                    if ($qt!=0) {
+                        $quantity = $qt;
+                    } else {
+                        array_push($errors, "bad line '".$lines2[$i]."'");
+                        continue;
+                    }
+                }
+                add_item($items, $typename, $quantity);
+            }
+        }
+    }
+
+    $result = array(
+        "items" => $items,
+        "errors" => $errors
+    );
+    return $result;
+}
 
 // create a new list
 $app->post('/my-lists', function ($request, $response, $args) {
@@ -55,7 +141,27 @@ $app->post('/my-lists', function ($request, $response, $args) {
         ':public' => $public
     ));
 
-    return $response->withStatus(302)->withHeader('Location', '/my-lists');
+    // get the id of the list we just inserted
+    $sql = 'SELECT LAST_INSERT_ID()';
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+    $listid = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['LAST_INSERT_ID()'];
+
+    // parse the body and insert the iteams
+    $sql = 'INSERT INTO dirtlistitem (listId, typeId, quantity) VALUES (:listid, (SELECT typeId FROM invType WHERE typeName=:typename), :quantity)';
+    $stmt = $db->prepare($sql);
+    $result = parseInput($request->getParsedBody()['list-add-input']);
+    $items = $result['items'];
+    $keys = array_keys($items);
+    for ($i=0; $i<count($keys); $i++) {
+        $stmt->execute(array(
+            ':listid' => $listid,
+            ':typename' => $keys[$i],
+            ':quantity' => $items[$keys[$i]]
+        ));
+    }
+
+    return $response->withStatus(302)->withHeader('Location', '/list/'.$listid);
 });
 
 // get specific user list
@@ -98,6 +204,7 @@ $app->get('/list/{listid}', function ($request, $response, $args) {
 
     $args['listinfo'] = $listinfo;
     $args['listitems'] = $listitems;
+    $response = $this->cache->denyCache($response);
     return $this->renderer->render($response, 'list.phtml', $args);
 });
 
