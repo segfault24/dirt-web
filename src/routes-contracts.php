@@ -108,6 +108,40 @@ $app->get('/contract/{contractid}', function ($request, $response, $args) {
         return $this->renderer->render($response, 'contract.phtml', $args);
     }
 
+    // else try the public contract table for exchange
+    $sql = 'SELECT ie.name AS issuer, sl.locationName, c.price, cs.value AS status, c.title, c.dateIssued, c.lastSeen
+            FROM publiccontract AS c
+            JOIN contractstatus AS cs ON cs.id=c.status
+            LEFT JOIN dlocation AS sl ON sl.locationId=c.startLocationId
+            LEFT JOIN dentity AS ie ON ie.id=c.issuerId
+            WHERE c.contractId=:contractid';
+    $stmt = $db->prepare($sql);
+    $stmt->execute(array(':contractid' => $args['contractid']));
+    if ($stmt->rowCount() > 0) {
+        // pass info to the template
+        $args['cinfo'] = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+		$args['cinfo']['availability'] = "Public";
+        // get the items
+        $sql = 'SELECT i.typeId, t.typeName, i.quantity FROM publiccontractitem AS i
+                JOIN invtype AS t ON t.typeId=i.typeId
+                WHERE contractId=:contractid AND i.included=1';
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array(':contractid' => $args['contractid']));
+        if ($stmt->rowCount() > 0) {
+            $args['offeritems'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        $sql = 'SELECT i.typeId, t.typeName, i.quantity FROM publiccontractitem AS i
+                JOIN invtype AS t ON t.typeId=i.typeId
+                WHERE contractId=:contractid AND i.included=0';
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array(':contractid' => $args['contractid']));
+        if ($stmt->rowCount() > 0) {
+            $args['askitems'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        $response = $this->cache->withExpires($response, time() + 300);
+        return $this->renderer->render($response, 'contract.phtml', $args);
+    }
+
     // else fail
     return $this->renderer->render($response, 'contract.phtml', $args);
 });
