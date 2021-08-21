@@ -31,6 +31,12 @@ $(document).ready(function() {
 	<div class="col-md-9">
 		<h3><i class="fa fa-paste fa-fw"></i> {{listinfo.name}}</h3>
 		<div class="btn-group" role="group" aria-label="Basic example">
+			<form method="post" action="https://evepraisal.com/appraisal" target="_blank">
+				<input type="hidden" id="raw_textarea" name="raw_textarea" value="{% for item in listitems %}{{item.typeName}}	{{item.quantity}}
+{% endfor %}">
+				<input type="hidden" id="market" name="market" value="jita">
+				<input type="submit" class="btn btn-danger" value="evepraisal">
+			</form>
 			<button type="button" class="btn btn-danger" id="export-list-button">Export</button>
 			<button type="button" class="btn btn-danger" id="delete-list-button">Delete</button>
 		</div>
