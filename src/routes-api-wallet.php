@@ -55,9 +55,10 @@ $app->get('/api/wallet/transactions', function ($request, $response, $args) {
     }
 
     $db = Dirt\Database::getDb();
-    $sql = 'SELECT t.`date`,a.`charName`,i.`typeId`,i.`typeName`,t.`isBuy`,t.`quantity`,t.`unitPrice` FROM wallettransaction AS t
+    $sql = 'SELECT t.`date`,a.`charName`,d.`name` as clientName,i.`typeId`,i.`typeName`,t.`isBuy`,t.`quantity`,t.`unitPrice` FROM wallettransaction AS t
             JOIN invtype AS i ON i.typeId=t.typeId
             JOIN dirtapiauth AS a ON a.charId=t.charId
+            LEFT JOIN dentity AS d ON d.id=t.clientId
             WHERE t.charId IN (
                 SELECT charId FROM dirtapiauth WHERE userId=:userid
             ) ORDER BY DATE DESC LIMIT 1000;';

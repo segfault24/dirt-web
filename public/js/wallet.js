@@ -80,6 +80,7 @@ $(document).ready(function(){
 		columns: [
 			{title:'Date', responsivePriority: 5},
 			{title:'Character', responsivePriority: 6},
+			{title:'Client', responsivePriority: 6},
 			{title:'Type', responsivePriority: 1},
 			{title:'Buy/Sell', responsivePriority: 4},
 			{title:'Quantity', responsivePriority: 3},
@@ -211,6 +212,7 @@ $(document).ready(function(){
 				transactionsTable.row.add([
 					result[i].date,
 					result[i].charName,
+					result[i].clientName,
 					'<a class="open-in-game" data-typeId="' + result[i].typeId + '" href="#"><i class="fa fa-magnet fa-fw"></i></a> <a href="browse?type=' + result[i].typeId + '" target="_blank">' + result[i].typeName + '</a>',
 					buySell,
 					formatInt(result[i].quantity),
