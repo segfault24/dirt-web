@@ -103,3 +103,94 @@ $app->get('/admin/structure-auths', function ($request, $response, $args) {
     $response = $this->cache->denyCache($response);
     return $this->renderer->render($response, 'admin/structure-auths.phtml', $args);
 });
+
+$app->get('/admin/edit-doctrines', function ($request, $response, $args) {
+    $u = Dirt\User::getUser();
+    if (! $u->isAdmin()) {
+        $this->logger->warning('/admin/edit-doctrines unauthorized access attempt');
+        return $response->withStatus(302)
+        ->withHeader('Location', '/dashboard');
+    }
+    $u->setTemplateVars($args);
+
+    $db = Dirt\Database::getDb();
+
+    // list of doctrines for table
+    $sql = 'SELECT d.doctrine, l.listId, l.name, s.structName, d.target
+            FROM doctrine AS d
+            JOIN dirtlist AS l ON d.listId=l.listId
+            JOIN structure AS s ON d.locationId=s.structId';
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $args['doclist'] = $rows;
+
+    // list of current user's lists
+    $sql = 'SELECT listId, name FROM dirtlist WHERE userId=:userid ORDER BY name ASC';
+    $stmt = $db->prepare($sql);
+    $stmt->execute(array(
+        ':userid' => $u->getUserId()
+    ));
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $args['lists'] = $rows;
+
+    // list of authed structures
+    $sql = 'SELECT s.structId, s.structName
+            FROM dirtstructauth AS dsa
+            JOIN structure AS s ON dsa.structId=s.structId
+            ORDER BY s.structName ASC';
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $args['structs'] = $rows;
+
+    $response = $this->cache->denyCache($response);
+    return $this->renderer->render($response, 'admin/edit-doctrines.phtml', $args);
+});
+
+$app->post('/admin/add-doctrine', function ($request, $response, $args) {
+    $u = Dirt\User::getUser();
+    if (! $u->isAdmin()) {
+        $this->logger->warning('/admin/add-doctrine unauthorized access attempt');
+        return $response->withStatus(302)
+        ->withHeader('Location', '/dashboard');
+    }
+
+    $listid = $request->getParsedBody()['doctrine-list'];
+    $structid = $request->getParsedBody()['doctrine-struct'];
+    $targetqt = $request->getParsedBody()['doctrine-targetqt'];
+
+    $db = Dirt\Database::getDb();
+    $sql = 'INSERT INTO doctrine (listId, locationId, quantity, target, lowestPrice)
+            VALUES (:listid, :structid, 0, :targetqt, 0)';
+    $stmt = $db->prepare($sql);
+    $stmt->execute(array(
+        ':listid' => $listid,
+        ':structid' => $structid,
+        ':targetqt' => $targetqt
+    ));
+
+    $this->logger->info('/admin/add-doctrine added doctrine for list ' . $listid . ' in struct ' . $structid);
+
+    return $response->withStatus(302)->withHeader('Location', '/admin/edit-doctrines');
+});
+
+$app->post('/admin/delete-doctrine/{doctrineid}', function ($request, $response, $args) {
+    $u = Dirt\User::getUser();
+    if (! $u->isAdmin()) {
+        $this->logger->warning('/admin/delete-doctrine unauthorized access attempt');
+        return $response->withStatus(302)
+        ->withHeader('Location', '/dashboard');
+    }
+
+    $db = Dirt\Database::getDb();
+    $sql = 'DELETE FROM doctrine WHERE doctrine=:doctrineid';
+    $stmt = $db->prepare($sql);
+    $stmt->execute(array(
+        ':doctrineid' => $args['doctrineid']
+    ));
+
+    $this->logger->info('/admin/delete-doctrine deleted doctrine ' . $args['doctrineid']);
+
+    return $response->withStatus(302)->withHeader('Location', '/admin/edit-doctrines');
+});
