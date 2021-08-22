@@ -4,14 +4,15 @@
 {% include 'table-libs.phtml' %}
 <script>
 $(document).ready(function() {
-    $('#doctrineTable').DataTable({
-        order: [[1, "asc"], [0, "asc"]],
-        paging: false,
-        bInfo: false,
-        responsive: true,
-        searching: true,
-        bLengthChange: false
-    });
+	$('#doctrineTable').DataTable({
+		order: [[1, "asc"], [0, "asc"]],
+		paging: false,
+		bInfo: false,
+		responsive: true,
+		searching: true,
+		select: true,
+		bLengthChange: false
+	});
 } );
 </script>
 {% endblock %}
