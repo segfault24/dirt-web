@@ -30,7 +30,7 @@ $(document).ready(function() {
 <div class="row">
 	<div class="col-md-9">
 		<h3><i class="fa fa-paste fa-fw"></i> {{listinfo.name}}</h3>
-		<div class="btn-group" role="group" aria-label="Basic example">
+		<div class="btn-group" role="group">
 			<form method="post" action="https://evepraisal.com/appraisal" target="_blank">
 				<input type="hidden" id="raw_textarea" name="raw_textarea" value="{% for item in listitems %}{{item.typeName}}	{{item.quantity}}
 {% endfor %}">
@@ -41,6 +41,10 @@ $(document).ready(function() {
 			<button type="button" class="btn btn-danger" id="delete-list-button">Delete</button>
 		</div>
 		<hr>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-9">
 		<div class="table-responsive">
 			<table id="item-table" class="table responsive table-striped table-hover table-condensed" style="width:100%">
 				<thead>

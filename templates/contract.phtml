@@ -27,6 +27,14 @@ $(document).ready(function() {
 <div class="row">
 	<div class="col-sm-12">
 		<h3 class="page-header"><i class="fa fa-handshake-o fa-fw"></i> Contract {{contractid}} <a id="open-in-game" class="open-in-game-contract" data-contractid="{{contractid}}" href="#"><i class="fa fa-magnet fa-fw"></i></a></h3>
+		<div class="btn-group" role="group">
+			<form method="post" action="https://evepraisal.com/appraisal" target="_blank">
+				<input type="hidden" id="raw_textarea" name="raw_textarea" value="{% for item in offeritems %}{{item.typeName}}	{{item.quantity}}
+{% endfor %}">
+				<input type="hidden" id="market" name="market" value="jita">
+				<input type="submit" class="btn btn-danger" value="evepraisal">
+			</form>
+		</div>
 		<hr>
 	</div>
 </div>
