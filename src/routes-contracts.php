@@ -165,6 +165,6 @@ $app->get('/doctrines', function ($request, $response, $args) {
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $args['doclist'] = $rows;
 
-    $response = $this->cache->withExpires($response, time() + 300);
+    $response = $this->cache->withExpires($response, time() + 120);
     return $this->renderer->render($response, 'doctrines.phtml', $args);
 });

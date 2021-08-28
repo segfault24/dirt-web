@@ -153,6 +153,7 @@ $app->get('/api/contract/capital/outstanding', function ($request, $response, $a
                 JOIN corpcontractitem AS ci ON ci.contractId=c.contractId
                 JOIN vjitabestsell AS j ON j.typeid=ci.typeid
                 WHERE ci.typeId NOT IN ('.$GLOBALS['cap_ids'].')
+                AND c.type=2 AND c.status=1 AND c.dateExpired>NOW()
                 GROUP BY c.contractId
             ) AS a ON a.contractId=c.contractId
             LEFT JOIN dlocation AS l ON l.locationId=c.startLocationId
@@ -183,7 +184,9 @@ $app->get('/api/contract/capital/finished', function ($request, $response, $args
                 JOIN corpcontractitem AS ci ON ci.contractId=c.contractId
                 JOIN vjitabestsell AS j ON j.typeid=ci.typeid
                 WHERE ci.typeId NOT IN ('.$GLOBALS['cap_ids'].')
+                AND c.type=2 AND c.status=5
                 GROUP BY c.contractId
+                ORDER BY c.dateCompleted DESC LIMIT 1000
             ) AS a ON a.contractId=c.contractId
             LEFT JOIN dlocation AS l ON l.locationId=c.startLocationId
             LEFT JOIN dentity AS e ON e.id=c.issuerId
