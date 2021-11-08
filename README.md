@@ -9,7 +9,7 @@ Simple order book display with depth and history charts. Includes an accordion-s
 ## Contracts
 Admittedly not as fully-featured as the in-game interface for contracts, but still adequate for locating certain things. It has special queries for looking at the top contractors and freight services to keep an eye on the competition.
 
-<img src="docs/contracts.png" alt="contracts viewer" width="800"/>
+<img src="docs/contracts.png" alt="contracts viewer" width="600"/>
 
 ## List Management
 Intended for keeping track of particular combinations of items, such as standardized ship fits.
