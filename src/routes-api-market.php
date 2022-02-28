@@ -30,11 +30,13 @@ $app->get('/api/market/orders/{location}/type/{type}', function ($request, $resp
             o.`orderId`, o.`typeId`, r.`regionName`, locs.`locationName`, o.`isBuyOrder`, o.`price`,
             o.`range`, o.`duration`, o.`volumeRemain`, o.`volumeTotal`, o.`minVolume`, o.`issued`
             FROM marketorder AS o
-            LEFT JOIN region AS r ON o.`regionId`=r.`regionId`
+            JOIN orderset AS s ON o.`setId`=s.`setId`
+            LEFT JOIN region AS r ON s.`regionId`=r.`regionId`
             LEFT JOIN dlocation AS locs ON o.`locationId`=locs.`locationId`
-            WHERE o.`typeId`=:type';
+            WHERE o.`setId` IN (SELECT `setId` FROM latestset)
+            AND o.`typeId`=:type';
     if ($args['location'] != 0) {
-        $sql .= ' AND (o.`regionId`=:location OR o.`locationId`=:location);';
+        $sql .= ' AND (s.`regionId`=:location OR o.`locationId`=:location);';
     }
     $stmt = $db->prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
     $stmt->execute();
