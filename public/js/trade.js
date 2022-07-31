@@ -25,8 +25,8 @@ $(document).ready(function() {
 		select: true
 	});
 
-	var srcRegion = 10000021;
-	var srcStruct = 1037022454355;
+	var srcRegion = 10000023;
+	var srcStruct = 1038708751029;
 	var dstRegion = 10000002;
 	var dstStruct = 60003760;
 	var tradeType = 'sell-buy';
@@ -36,7 +36,7 @@ $(document).ready(function() {
 		{ region: 10000002, struct: 60003760 },
 		{ region: 10000043, struct: 60008494 },
 		{ region: 10000032, struct: 60011866 },
-		{ region: 10000021, struct: 1037022454355 }
+		{ region: 10000023, struct: 1038708751029 }
 	];
 
 	function fillStructs(region, select) {
