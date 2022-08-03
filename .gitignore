@@ -1,6 +1,9 @@
 # eclipse stuff
 .settings/
 
+# intellij stuff
+.idea/
+
 # build artifacts
 composer.phar
 vendor/
