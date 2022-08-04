@@ -34,7 +34,7 @@ $(document).ready(function() {
 		{ region: 10000002, struct: 60003760 },
 		{ region: 10000043, struct: 60008494 },
 		{ region: 10000032, struct: 60011866 },
-		{ region: 10000021, struct: 1037022454355 }
+		{ region: 10000023, struct: 1038708751029 }
 	];
 
 	function fillStructs(region, select) {

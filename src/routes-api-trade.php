@@ -170,12 +170,14 @@ $app->get('/api/trade/export/jita-sell/{source}', function ($request, $response,
 
     $sql  = 'SELECT o.typeId, i.typeName, o.price AS source, o.volumeRemain AS qt, d.best AS dest, i.volume
              FROM marketorder AS o
+             JOIN orderset AS s ON o.setId=s.setId
              JOIN vjitabestsell AS d ON o.typeId=d.typeId
-             JOIN invtype AS i ON o.typeId=i.typeId';
+             JOIN invtype AS i ON o.typeId=i.typeId
+             WHERE o.setId IN (SELECT setId FROM latestset)';
     if (intval($args['source']) > 20000000) {
-        $sql .= ' WHERE o.locationId=:source';
+        $sql .= ' AND o.locationId=:source';
     } else {
-        $sql .= ' WHERE o.regionId=:source';
+        $sql .= ' AND o.regionId=:source';
     }
     $sql .= ' AND o.isBuyOrder=0';
     $sql .= ' AND o.price < d.best';
@@ -196,12 +198,14 @@ $app->get('/api/trade/export/jita-buy/{source}', function ($request, $response, 
 
     $sql  = 'SELECT o.typeId, i.typeName, o.price AS source, o.volumeRemain AS qt, d.best AS dest, i.volume
              FROM marketorder AS o
+             JOIN orderset AS s ON o.setId=s.setId
              JOIN vjitabestbuy AS d ON o.typeId=d.typeId
-             JOIN invtype AS i ON o.typeId=i.typeId';
+             JOIN invtype AS i ON o.typeId=i.typeId
+             WHERE o.setId IN (SELECT setId FROM latestset)';
     if (intval($args['source']) > 20000000) {
-        $sql .= ' WHERE o.locationId=:source';
+        $sql .= ' AND o.locationId=:source';
     } else {
-        $sql .= ' WHERE o.regionId=:source';
+        $sql .= ' AND o.regionId=:source';
     }
     $sql .= ' AND o.isBuyOrder=0';
     $sql .= ' AND o.price < d.best';
@@ -241,20 +245,22 @@ $app->get('/api/trade/import/jita-sell/{destination}', function ($request, $resp
         $destregionid = $regioninfo['regionId'];
     }
 
-    $sql  = 'SELECT inv.typeId, inv.typeName, inv.volume, src.source, dst.dest, dst.stock, stat.ma30, stat.ma90
+    $sql  = 'SELECT inv.typeId, inv.typeName, inv.volume, src.best, dst.best, dst.stock, stat.ma30, stat.ma90
              FROM marketstat stat
              JOIN invtype inv ON inv.typeId=stat.typeId
              JOIN vjitabestsell src ON src.typeId=stat.typeId
              JOIN (
-               SELECT typeId, MIN(price) AS dest, SUM(volumeRemain) AS stock FROM marketorder';
+               SELECT typeId, MIN(price) AS best, SUM(volumeRemain) AS stock
+               FROM marketorder m
+               JOIN orderset s ON m.setId=s.setId';
     if (intval($args['destination']) > 20000000) {
-        $sql .= '  WHERE locationId=:destination';
+        $sql .= '  WHERE m.locationId=:destination';
     } else {
-        $sql .= '  WHERE regionId=:destination';
+        $sql .= '  WHERE m.regionId=:destination';
     }
-    $sql .= '   AND isBuyOrder=0 GROUP BY typeId
+    $sql .= '   AND m.isBuyOrder=0 GROUP BY m.typeId
               ) dst ON dst.typeId=stat.typeId
-              WHERE src.source < dst.dest
+              WHERE src.best < dst.best
               AND stat.regionId=:destregionid
               AND stat.ma30 > 0';
 
