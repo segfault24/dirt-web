@@ -173,14 +173,14 @@ $app->get('/api/trade/export/jita-sell/{source}', function ($request, $response,
              JOIN orderset AS s ON o.setId=s.setId
              JOIN vjitabestsell AS d ON o.typeId=d.typeId
              JOIN invtype AS i ON o.typeId=i.typeId
-             WHERE o.setId IN (SELECT setId FROM latestset)';
+             WHERE s.setId IN (SELECT setId FROM latestset)';
     if (intval($args['source']) > 20000000) {
         $sql .= ' AND o.locationId=:source';
     } else {
         $sql .= ' AND s.regionId=:source';
     }
-    $sql .= 'AND o.isBuyOrder=0
-             AND o.price<d.best';
+    $sql .= ' AND o.isBuyOrder=0
+              AND o.price<d.best';
 
     $stmt = $db->prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
     $stmt->execute();
@@ -201,14 +201,14 @@ $app->get('/api/trade/export/jita-buy/{source}', function ($request, $response, 
              JOIN orderset AS s ON o.setId=s.setId
              JOIN vjitabestbuy AS d ON o.typeId=d.typeId
              JOIN invtype AS i ON o.typeId=i.typeId
-             WHERE o.setId IN (SELECT setId FROM latestset)';
+             WHERE s.setId IN (SELECT setId FROM latestset)';
     if (intval($args['source']) > 20000000) {
         $sql .= ' AND o.locationId=:source';
     } else {
         $sql .= ' AND s.regionId=:source';
     }
-    $sql .= 'AND o.isBuyOrder=0
-             AND o.price<d.best';
+    $sql .= ' AND o.isBuyOrder=0
+              AND o.price<d.best';
 
     $stmt = $db->prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
     $stmt->execute();
