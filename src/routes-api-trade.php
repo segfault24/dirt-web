@@ -177,10 +177,10 @@ $app->get('/api/trade/export/jita-sell/{source}', function ($request, $response,
     if (intval($args['source']) > 20000000) {
         $sql .= ' AND o.locationId=:source';
     } else {
-        $sql .= ' AND o.regionId=:source';
+        $sql .= ' AND s.regionId=:source';
     }
-    $sql .= ' AND o.isBuyOrder=0';
-    $sql .= ' AND o.price < d.best';
+    $sql .= 'AND o.isBuyOrder=0
+             AND o.price<d.best';
 
     $stmt = $db->prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
     $stmt->execute();
@@ -205,10 +205,10 @@ $app->get('/api/trade/export/jita-buy/{source}', function ($request, $response, 
     if (intval($args['source']) > 20000000) {
         $sql .= ' AND o.locationId=:source';
     } else {
-        $sql .= ' AND o.regionId=:source';
+        $sql .= ' AND s.regionId=:source';
     }
-    $sql .= ' AND o.isBuyOrder=0';
-    $sql .= ' AND o.price < d.best';
+    $sql .= 'AND o.isBuyOrder=0
+             AND o.price<d.best';
 
     $stmt = $db->prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
     $stmt->execute();
@@ -258,11 +258,11 @@ $app->get('/api/trade/import/jita-sell/{destination}', function ($request, $resp
     } else {
         $sql .= '  WHERE m.regionId=:destination';
     }
-    $sql .= '   AND m.isBuyOrder=0 GROUP BY m.typeId
-              ) dst ON dst.typeId=stat.typeId
-              WHERE src.best < dst.best
-              AND stat.regionId=:destregionid
-              AND stat.ma30 > 0';
+    $sql .= '  AND m.isBuyOrder=0 GROUP BY m.typeId
+             ) dst ON dst.typeId=stat.typeId
+             WHERE src.best < dst.best
+             AND stat.regionId=:destregionid
+             AND stat.ma30 > 0';
 
     $stmt = $db->prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
     $stmt->execute();
