@@ -165,14 +165,12 @@ $app->get('/api/trade/structs-by-region/{region}/', function ($request, $respons
     return $response->withJson($stmt->fetchAll(PDO::FETCH_ASSOC));
 });
 
-$app->get('/api/trade/sell-sell/{source}/{destination}', function ($request, $response, $args) {
+$app->get('/api/trade/export/jita-sell/{source}', function ($request, $response, $args) {
     $db = Dirt\Database::getDb();
 
     $sql  = 'SELECT o.typeId, i.typeName, o.price AS source, o.volumeRemain AS qt, d.best AS dest, i.volume
              FROM marketorder AS o
-             JOIN (
-               SELECT typeId, MIN(price) AS best FROM marketorder WHERE locationId=:destination AND isBuyOrder=0 GROUP BY typeId, locationId
-             ) AS d ON o.typeId=d.typeId
+             JOIN vjitabestsell AS d ON o.typeId=d.typeId
              JOIN invtype AS i ON o.typeId=i.typeId';
     if (intval($args['source']) > 20000000) {
         $sql .= ' WHERE o.locationId=:source';
@@ -186,23 +184,20 @@ $app->get('/api/trade/sell-sell/{source}/{destination}', function ($request, $re
     $stmt->execute();
     $stmt = $db->prepare($sql);
     $stmt->execute(array(
-        ':source' => $args['source'],
-        ':destination' => $args['destination']
+        ':source' => $args['source']
     ));
 
     $response = $this->cache->withExpires($response, time() + 300);
     return $response->withJson($stmt->fetchAll(PDO::FETCH_ASSOC));
 });
 
-$app->get('/api/trade/sell-buy/{source}/{destination}', function ($request, $response, $args) {
+$app->get('/api/trade/export/jita-buy/{source}', function ($request, $response, $args) {
     $db = Dirt\Database::getDb();
 
-    $sql  = 'SELECT o.typeId, i.typeName, o.price AS source, o.volumeRemain AS qt, d.best AS dest, i.volume';
-    $sql .= ' FROM marketorder AS o';
-    $sql .= ' JOIN (';
-    $sql .= '  SELECT typeId, MAX(price) AS best FROM marketorder WHERE locationId=:destination AND isBuyOrder=1 GROUP BY typeId, locationId';
-    $sql .= ' ) AS d ON o.typeId=d.typeId';
-    $sql .= ' JOIN invtype AS i ON o.typeId=i.typeId';
+    $sql  = 'SELECT o.typeId, i.typeName, o.price AS source, o.volumeRemain AS qt, d.best AS dest, i.volume
+             FROM marketorder AS o
+             JOIN vjitabestbuy AS d ON o.typeId=d.typeId
+             JOIN invtype AS i ON o.typeId=i.typeId';
     if (intval($args['source']) > 20000000) {
         $sql .= ' WHERE o.locationId=:source';
     } else {
@@ -215,15 +210,14 @@ $app->get('/api/trade/sell-buy/{source}/{destination}', function ($request, $res
     $stmt->execute();
     $stmt = $db->prepare($sql);
     $stmt->execute(array(
-        ':source' => $args['source'],
-        ':destination' => $args['destination']
+        ':source' => $args['source']
     ));
 
     $response = $this->cache->withExpires($response, time() + 300);
     return $response->withJson($stmt->fetchAll(PDO::FETCH_ASSOC));
 });
 
-$app->get('/api/trade/import/{source}/{destination}', function ($request, $response, $args) {
+$app->get('/api/trade/import/jita-sell/{destination}', function ($request, $response, $args) {
     $db = Dirt\Database::getDb();
 
     // get destination region if destination is a struct/station
@@ -247,35 +241,27 @@ $app->get('/api/trade/import/{source}/{destination}', function ($request, $respo
         $destregionid = $regioninfo['regionId'];
     }
 
-    $sql  = 'SELECT inv.typeId, inv.typeName, inv.volume, src.source, dst.dest, dst.stock, stat.ma30, stat.ma90 FROM marketstat stat';
-    $sql .= ' JOIN invtype inv ON inv.typeId=stat.typeId';
-    $sql .= ' JOIN (';
-    $sql .= '  SELECT typeId, MIN(price) AS source FROM marketorder';
-    if (intval($args['source']) > 20000000) {
-        $sql .= '  WHERE locationId=:source';
-    } else {
-        $sql .= '  WHERE regionId=:source';
-    }
-    $sql .= '   AND isBuyOrder=0 GROUP BY typeId';
-    $sql .= ' ) src ON src.typeId=stat.typeId';
-    $sql .= ' JOIN (';
-    $sql .= '  SELECT typeId, MIN(price) AS dest, SUM(volumeRemain) AS stock FROM marketorder';
+    $sql  = 'SELECT inv.typeId, inv.typeName, inv.volume, src.source, dst.dest, dst.stock, stat.ma30, stat.ma90
+             FROM marketstat stat
+             JOIN invtype inv ON inv.typeId=stat.typeId
+             JOIN vjitabestsell src ON src.typeId=stat.typeId
+             JOIN (
+               SELECT typeId, MIN(price) AS dest, SUM(volumeRemain) AS stock FROM marketorder';
     if (intval($args['destination']) > 20000000) {
         $sql .= '  WHERE locationId=:destination';
     } else {
         $sql .= '  WHERE regionId=:destination';
     }
-    $sql .= '   AND isBuyOrder=0 GROUP BY typeId';
-    $sql .= ' ) dst ON dst.typeId=stat.typeId';
-    $sql .= ' WHERE src.source < dst.dest';
-    $sql .= ' AND stat.regionId=:destregionid';
-    $sql .= ' AND stat.ma30 > 0';
+    $sql .= '   AND isBuyOrder=0 GROUP BY typeId
+              ) dst ON dst.typeId=stat.typeId
+              WHERE src.source < dst.dest
+              AND stat.regionId=:destregionid
+              AND stat.ma30 > 0';
 
     $stmt = $db->prepare("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED");
     $stmt->execute();
     $stmt = $db->prepare($sql);
     $stmt->execute(array(
-        ':source' => $args['source'],
         ':destination' => $args['destination'],
         ':destregionid' => $destregionid
     ));

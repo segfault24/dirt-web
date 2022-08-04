@@ -26,10 +26,8 @@ $(document).ready(function() {
 		select: true
 	});
 
-	var srcRegion = 10000002;
-	var srcStruct = 60003760;
-	var dstRegion = 10000021;
-	var dstStruct = 1037022454355;
+	var dstRegion = 10000023;
+	var dstStruct = 1038708751029;
 	var data;
 
 	var preferredStructs = [
@@ -54,12 +52,6 @@ $(document).ready(function() {
 		});
 	}
 
-	$('#src-region-select').val(srcRegion);
-	fillStructs(srcRegion, 'src-struct-select');
-	$('#src-region-select').change(function() {
-		srcRegion = $('#src-region-select').val();
-		fillStructs(srcRegion, 'src-struct-select');
-	});
 	$('#dst-region-select').val(dstRegion);
 	fillStructs(dstRegion, 'dst-struct-select');
 	$('#dst-region-select').change(function() {
@@ -69,7 +61,6 @@ $(document).ready(function() {
 
 	$('#refresh-data').click(function() {
 		$("#refresh-data").attr("disabled", true);
-		srcStruct = $('#src-struct-select').val();
 		dstStruct = $('#dst-struct-select').val();
 		reloadData();
 	});
@@ -80,7 +71,7 @@ $(document).ready(function() {
 
 	function reloadData(callback) {
 		importTable.clear().draw();
-		$.getJSON('/api/trade/import/' + srcStruct + '/' + dstStruct, function(result) {
+		$.getJSON('/api/trade/import/jita-sell/' + dstStruct, function(result) {
 			data = result;
 			reloadTable();
 		});

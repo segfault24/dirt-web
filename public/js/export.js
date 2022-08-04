@@ -3,7 +3,7 @@
 $(document).ready(function() {
 
 	// initialize table
-	var tradeTable = $('#trade-table').DataTable({
+	var tradeTable = $('#export-table').DataTable({
 		columns: [
 			{title:'Item', responsivePriority: 1},
 			{title:'Qt', responsivePriority: 3},
@@ -27,9 +27,7 @@ $(document).ready(function() {
 
 	var srcRegion = 10000023;
 	var srcStruct = 1038708751029;
-	var dstRegion = 10000002;
-	var dstStruct = 60003760;
-	var tradeType = 'sell-buy';
+	var tradeType = 'jita-buy';
 	var data;
 
 	var preferredStructs = [
@@ -60,17 +58,10 @@ $(document).ready(function() {
 		srcRegion = $('#src-region-select').val();
 		fillStructs(srcRegion, 'src-struct-select');
 	});
-	$('#dst-region-select').val(dstRegion);
-	fillStructs(dstRegion, 'dst-struct-select');
-	$('#dst-region-select').change(function() {
-		dstRegion = $('#dst-region-select').val();
-		fillStructs(dstRegion, 'dst-struct-select');
-	});
 
 	$('#refresh-data').click(function() {
 		$("#refresh-data").attr("disabled", true);
 		srcStruct = $('#src-struct-select').val();
-		dstStruct = $('#dst-struct-select').val();
 		tradeType = $('#trade-type-select').val();
 		reloadData();
 	});
@@ -81,7 +72,7 @@ $(document).ready(function() {
 
 	function reloadData(callback) {
 		tradeTable.clear().draw();
-		$.getJSON('/api/trade/' + tradeType + '/' + srcStruct + '/' + dstStruct, function(result) {
+		$.getJSON('/api/trade/export/' + tradeType + '/' + srcStruct, function(result) {
 			data = result;
 			reloadTable();
 		});
