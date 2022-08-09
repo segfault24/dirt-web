@@ -196,7 +196,7 @@ $app->get('/item-stock', function ($request, $response, $args) {
             cross join (
                 select typeid, sum(quantity) as target
                 from dirtlistitem
-                where listid=:listid
+                where listid=(select propertyValue from property where propertyname="stocklistid")
                 group by typeId
             ) tgt on tgt.typeid=j.typeid
             left join (
@@ -216,9 +216,7 @@ $app->get('/item-stock', function ($request, $response, $args) {
                 group by o.typeId
             ) stg on stg.typeid=j.typeid';
     $stmt = $db->prepare($sql);
-    $stmt->execute(array(
-        ':listid' => 147
-    ));
+    $stmt->execute();
 
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $args['stocklist'] = $rows;
