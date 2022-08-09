@@ -161,7 +161,10 @@ $app->post('/my-lists', function ($request, $response, $args) {
         ));
     }
 
-    return $response->withStatus(302)->withHeader('Location', '/list/'.$listid);
+    $args['errors'] = $result['errors'];
+    
+    return $this->renderer->render($response, 'list-error.phtml', $args);
+    // return $response->withStatus(302)->withHeader('Location', '/list/'.$listid);
 });
 
 // get specific user list

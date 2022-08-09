@@ -1,0 +1,21 @@
+{% extends "base.phtml" %}
+{% block title %}List Errors{% endblock %}
+{% block extrahead %}
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<h3 class="page-header" id="title"><i class="fa fa-exclamation-triangle fa-fw"></i> List Errors</h3>
+		<hr>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="table-responsive">
+{% for error in errors %}
+			<p>{{ error }}</p>
+{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}
