@@ -194,3 +194,50 @@ $app->post('/admin/delete-doctrine/{doctrineid}', function ($request, $response,
 
     return $response->withStatus(302)->withHeader('Location', '/admin/edit-doctrines');
 });
+
+$app->get('/admin/set-stock-list', function ($request, $response, $args) {
+    $u = Dirt\User::getUser();
+    if (! $u->isAdmin()) {
+        $this->logger->warning('/admin/set-stock-list unauthorized access attempt');
+        return $response->withStatus(302)
+        ->withHeader('Location', '/dashboard');
+    }
+    $u->setTemplateVars($args);
+
+    $db = Dirt\Database::getDb();
+
+    // list of current user's lists
+    $sql = 'SELECT listId, name FROM dirtlist WHERE userId=:userid ORDER BY name ASC';
+    $stmt = $db->prepare($sql);
+    $stmt->execute(array(
+        ':userid' => $u->getUserId()
+    ));
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $args['lists'] = $rows;
+
+    $response = $this->cache->denyCache($response);
+    return $this->renderer->render($response, 'admin/set-stock-list.phtml', $args);
+});
+
+$app->post('/admin/set-stock-list', function ($request, $response, $args) {
+    $u = Dirt\User::getUser();
+    if (! $u->isAdmin()) {
+        $this->logger->warning('/admin/set-stock-list unauthorized access attempt');
+        return $response->withStatus(302)
+        ->withHeader('Location', '/dashboard');
+    }
+
+    $listid = $request->getParsedBody()['item-list'];
+
+    $db = Dirt\Database::getDb();
+    $sql = 'INSERT INTO property (propertyName, propertyValue) VALUES ("stock-listid", :listid)
+        ON DUPLICATE KEY UPDATE propertyValue=VALUES("propertyName")';
+    $stmt = $db->prepare($sql);
+    $stmt->execute(array(
+        ':listid' => $listid
+    ));
+
+    $this->logger->info('/admin/set-stock-list set item stock list ' . $listid);
+
+    return $response->withStatus(302)->withHeader('Location', '/admin');
+});

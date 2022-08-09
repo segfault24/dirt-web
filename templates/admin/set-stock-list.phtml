@@ -1,0 +1,32 @@
+{% extends "base.phtml" %}
+{% block title %}Set Stock List{% endblock %}
+{% block extrahead %}
+{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<h3 class="page-header" id="title"><i class="fa fa-shopping-cart fa-fw"></i> Set Stock List</h3>
+		<hr>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-9">
+		<div class="table-responsive">
+		</div>
+	</div>
+</div>
+<form role="form" method="post" action="/admin/set-stock-list">
+    <div class="form-group">
+        <label for="list-select">List</label>
+        <select class="form-control" name="item-list">
+{% for list in lists %}
+            <option value="{{list.listId}}">{{list.name}}</option>
+{% endfor %}
+        </select>
+    </div>
+    <div>
+        <hr>
+        <input type="submit" class="btn btn-success" value="Set">
+    </div>
+</form>
+{% endblock %}
