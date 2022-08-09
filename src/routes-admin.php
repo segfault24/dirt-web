@@ -230,10 +230,12 @@ $app->post('/admin/set-stock-list', function ($request, $response, $args) {
     $listid = $request->getParsedBody()['item-list'];
 
     $db = Dirt\Database::getDb();
-    $sql = 'INSERT INTO property (propertyName, propertyValue) VALUES (stocklistid, :listid)
-        ON DUPLICATE KEY UPDATE propertyValue=:listid';
+
+    $sql = 'INSERT INTO `property` (`propertyName`, `propertyValue`) VALUES (:propname, :listid)
+        ON DUPLICATE KEY UPDATE `propertyValue`=VALUES(`propertyValue`)';
     $stmt = $db->prepare($sql);
     $stmt->execute(array(
+        ':propname' => "stocklistid",
         ':listid' => $listid
     ));
 
