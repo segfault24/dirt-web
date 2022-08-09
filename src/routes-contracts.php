@@ -180,14 +180,14 @@ $app->get('/itemstock', function ($request, $response, $args) {
     $db = Dirt\Database::getDb();
     $sql = 'select
                 tgt.typeid,
-                t.typeName,
+                t.typename,
                 coalesce(available, 0) as available,
                 target,
                 greatest(target - coalesce(available, 0), 0) as need,
-                coalesce(available, 0) / target as goal,
+                100 * coalesce(available, 0) / target as goal,
                 j.best as jitasell,
                 coalesce(stagingsell, 0) as stagingsell,
-                coalesce((stagingsell - j.best - 0.01 * j.best + 800 * t.volume) / j.best, 0) as margin,
+                100 * coalesce((stagingsell - j.best - 0.01 * j.best + 800 * t.volume) / j.best, 0) as margin,
                 1.2 * (j.best - 0.01 * j.best + 800 * t.volume) as targetprice,
                 coalesce(mktcap, 0) as mktcap,
                 j.best * target as tgtcap

@@ -33,7 +33,7 @@ $(document).ready(function() {
 						<th>Available</th>
 						<th>Target</th>
 						<th>Need</th>
-						<th>Need %</th>
+						<th>% Stocked</th>
 						<th>Jita Sell</th>
 						<th>Stg Sell</th>
 						<th>Margin</th>
@@ -45,17 +45,17 @@ $(document).ready(function() {
 				<tbody>
 {% for result in stocklist %}
 					<tr>
-						<td><a href="/browse?type={{result.typeId}}">{{result.typeName}}</a></td>
+						<td><a href="/browse?type={{result.typeid}}">{{result.typename}}</a></td>
 						<td>{{ result.available }}</td>
 						<td>{{ result.target }}</td>
 						<td>{{ result.need }}</td>
-						<td>{{ 100 * result.goal | number_format(0) }}</td>
+						<td>{{ result.goal | number_format(0) }}</td>
 						<td>{{ result.jitasell | number_format(0) }}</td>
 						<td>{{ result.stagingsell | number_format(0) }}</td>
-						<td>{{ 100 * result.margin | number_format(0) }}</td>
+						<td>{{ result.margin | number_format(0) }}</td>
 						<td>{{ result.targetprice | number_format(0) }}</td>
-						<td>{{ mktcap | number_format(0) }}</td>
-						<td>{{ tgtcap | number_format(0) }}</td>
+						<td>{{ result.mktcap | number_format(0) }}</td>
+						<td>{{ result.tgtcap | number_format(0) }}</td>
 					</tr>
 {% endfor %}
 				</tbody>
