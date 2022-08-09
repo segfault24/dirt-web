@@ -93,12 +93,11 @@ function parseInput($input) {
                 if (count($parts)==1) {
                     $quantity = 1;
                 } else {
-                    $qt = intval($parts[1]);
+                    $qt = intval(str_replace(',', '', $parts[1]));
                     if ($qt!=0) {
                         $quantity = $qt;
                     } else {
                         array_push($errors, "bad line '".$lines2[$i]."'");
-                        $this->logger->warning("bad line '".$lines2[$i]."'");
                         continue;
                     }
                 }
