@@ -169,7 +169,7 @@ $app->get('/doctrines', function ($request, $response, $args) {
     return $this->renderer->render($response, 'doctrines.phtml', $args);
 });
 
-$app->get('/itemstock', function ($request, $response, $args) {
+$app->get('/item-stock', function ($request, $response, $args) {
     $u = Dirt\User::getUser();
     if (! $u->isLoggedIn()) {
         return $response->withStatus(302)
@@ -224,5 +224,5 @@ $app->get('/itemstock', function ($request, $response, $args) {
     $args['stocklist'] = $rows;
 
     $response = $this->cache->withExpires($response, time() + 120);
-    return $this->renderer->render($response, 'itemstock.phtml', $args);
+    return $this->renderer->render($response, 'item-stock.phtml', $args);
 });
