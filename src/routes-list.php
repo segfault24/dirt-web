@@ -98,6 +98,7 @@ function parseInput($input) {
                         $quantity = $qt;
                     } else {
                         array_push($errors, "bad line '".$lines2[$i]."'");
+                        $this->logger->warning("bad line '".$lines2[$i]."'");
                         continue;
                     }
                 }
@@ -162,7 +163,7 @@ $app->post('/my-lists', function ($request, $response, $args) {
     }
 
     $args['errors'] = $result['errors'];
-    
+
     return $this->renderer->render($response, 'list-error.phtml', $args);
     // return $response->withStatus(302)->withHeader('Location', '/list/'.$listid);
 });
