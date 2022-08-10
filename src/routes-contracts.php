@@ -187,8 +187,8 @@ $app->get('/item-stock', function ($request, $response, $args) {
                 100 * coalesce(available, 0) / target as goal,
                 j.best as jitasell,
                 coalesce(stagingsell, 0) as stagingsell,
-                100 * coalesce((stagingsell - j.best - 0.01 * j.best + 800 * t.volume) / j.best, 0) as margin,
-                1.2 * (j.best - 0.01 * j.best + 800 * t.volume) as targetprice,
+                100 * coalesce((stagingsell - j.best - 0.01 * j.best - 800 * t.volume) / j.best, 0) as margin,
+                1.1 * (j.best + 0.01 * j.best + 800 * t.volume + 0.05 * j.best) as targetprice,
                 coalesce(mktcap, 0) as mktcap,
                 j.best * target as tgtcap
             from vjitabestsell j
@@ -210,7 +210,7 @@ $app->get('/item-stock', function ($request, $response, $args) {
                 left join orderset s on s.setId=o.setId
                 left join invtype t on t.typeid=o.typeid
                 where s.setId in (select setId from latestset)
-                and o.locationId in (1038708751029, 1039071618828, 60012580)
+                and o.locationId in (1038708751029)
                 and o.isBuyOrder=false
                 and o.price <= 1.5 * (j.best + 0.01 * j.best + 800 * t.volume)
                 group by o.typeId
