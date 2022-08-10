@@ -46,9 +46,9 @@ $(document).ready(function() {
 {% for result in stocklist %}
 					<tr>
 						<td><a href="/browse?type={{result.typeid}}">{{result.typename}}</a></td>
-						<td>{{ result.available }}</td>
-						<td>{{ result.target }}</td>
-						<td>{{ result.need }}</td>
+						<td>{{ result.available | number_format(0) }}</td>
+						<td>{{ result.target | number_format(0) }}</td>
+						<td>{{ result.need | number_format(0) }}</td>
 						<td>{{ result.goal | number_format(0) }}</td>
 						<td>{{ result.jitasell | number_format(0) }}</td>
 						<td>{{ result.stagingsell | number_format(0) }}</td>
