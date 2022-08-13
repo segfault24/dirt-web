@@ -212,7 +212,7 @@ $app->get('/item-stock', function ($request, $response, $args) {
                 where s.setId in (select setId from latestset)
                 and o.locationId in (1038708751029)
                 and o.isBuyOrder=false
-                and o.price <= 1.5 * (j.best + 0.01 * j.best + 800 * t.volume)
+                and o.price <= 2 * (j.best + 0.01 * j.best + 800 * t.volume)
                 group by o.typeId
             ) stg on stg.typeid=j.typeid';
     $stmt = $db->prepare($sql);
