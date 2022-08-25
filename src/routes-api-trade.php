@@ -245,18 +245,19 @@ $app->get('/api/trade/import/jita-sell/{destination}', function ($request, $resp
         $destregionid = $regioninfo['regionId'];
     }
 
-    $sql  = 'SELECT inv.typeId, inv.typeName, inv.volume, src.best, dst.best, dst.stock, stat.ma30, stat.ma90
+    $sql  = 'SELECT inv.typeId, inv.typeName, inv.volume, src.best AS source, dst.best AS dest, dst.stock, stat.ma30, stat.ma90
              FROM marketstat stat
              JOIN invtype inv ON inv.typeId=stat.typeId
              JOIN vjitabestsell src ON src.typeId=stat.typeId
              JOIN (
                SELECT typeId, MIN(price) AS best, SUM(volumeRemain) AS stock
                FROM marketorder m
-               JOIN orderset s ON m.setId=s.setId';
+               JOIN orderset s ON m.setId=s.setId
+               WHERE s.setId IN (SELECT setId FROM latestset)';
     if (intval($args['destination']) > 20000000) {
-        $sql .= '  WHERE m.locationId=:destination';
+        $sql .= ' AND m.locationId=:destination';
     } else {
-        $sql .= '  WHERE m.regionId=:destination';
+        $sql .= ' AND m.regionId=:destination';
     }
     $sql .= '  AND m.isBuyOrder=0 GROUP BY m.typeId
              ) dst ON dst.typeId=stat.typeId
